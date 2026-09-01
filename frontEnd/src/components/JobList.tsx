@@ -3,12 +3,14 @@ import JobCard from "./JobCard";
 
 interface JobListProps {
   jobs: JobsType[];
+  onDelete: (id: number) => void;
+  onEdit: (id: number) => void;
 }
-const JobList = ({ jobs }: JobListProps) => {
+const JobList = ({ jobs, onDelete, onEdit }: JobListProps) => {
   return (
     <ul>
       {jobs.map((job) => (
-        <JobCard key={job.id} job={job} />
+        <JobCard key={job.id} job={job} onDelete={onDelete} onEdit={onEdit} />
       ))}
     </ul>
   );

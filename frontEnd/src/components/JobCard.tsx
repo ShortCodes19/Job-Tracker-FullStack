@@ -2,8 +2,10 @@ import type { JobsType } from "../Types/types";
 
 interface JobCardProps {
   job: JobsType;
+  onDelete: (id: number) => void;
+  onEdit: (id: number) => void;
 }
-const JobCard = ({ job }: JobCardProps) => {
+const JobCard = ({ job, onDelete, onEdit }: JobCardProps) => {
   const date = new Date(job.appliedDate);
 
   const formattedDate = !isNaN(date.getTime())
@@ -14,7 +16,7 @@ const JobCard = ({ job }: JobCardProps) => {
       }).format(date)
     : "Date not specified";
   return (
-    <li>
+    <li className="flex flex-col gap-2 bg-emerald-200">
       <p>{job.companyName}</p>
       <p>{job.position}</p>
       <p>{job.location}</p>
@@ -29,6 +31,8 @@ const JobCard = ({ job }: JobCardProps) => {
           formattedDate
         )}
       </p>
+      <button onClick={() => onDelete(job.id)}>Delete</button>
+      <button onClick={() => onEdit(job.id)}>Edit</button>
     </li>
   );
 };

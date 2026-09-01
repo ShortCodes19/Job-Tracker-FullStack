@@ -1,11 +1,12 @@
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
 import type { JobsType, NewJob } from "../Types/types";
 
 interface JobFormProps {
   onAdd: (job: NewJob) => void;
+  editingJob: JobsType | null;
 }
 
-const JobForm = ({ onAdd }: JobFormProps) => {
+const JobForm = ({ onAdd, editingJob }: JobFormProps) => {
   const [inputs, setInputs] = useState({
     companyName: "",
     position: "",
@@ -15,6 +16,20 @@ const JobForm = ({ onAdd }: JobFormProps) => {
     status: "Applied",
     appliedDate: "",
   });
+
+  useEffect(() => {
+    if (editingJob) {
+      setInputs({
+        companyName: editingJob.companyName,
+        position: editingJob.position,
+        location: editingJob.location,
+        salary: String(editingJob.salary),
+        flexibility: editingJob.flexibility,
+        status: editingJob.status,
+        appliedDate: editingJob.appliedDate,
+      });
+    }
+  }, [editingJob]);
 
   const handleChange = (
     e: React.ChangeEvent<HTMLInputElement | HTMLSelectElement>,
