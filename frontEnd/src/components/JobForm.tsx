@@ -4,9 +4,10 @@ import type { JobsType, NewJob } from "../Types/types";
 interface JobFormProps {
   onAdd: (job: NewJob) => void;
   editingJob: JobsType | null;
+  updateJob: (updatedJob: JobsType) => void;
 }
 
-const JobForm = ({ onAdd, editingJob }: JobFormProps) => {
+const JobForm = ({ onAdd, editingJob, updateJob }: JobFormProps) => {
   const [inputs, setInputs] = useState({
     companyName: "",
     position: "",
@@ -54,7 +55,15 @@ const JobForm = ({ onAdd, editingJob }: JobFormProps) => {
       appliedDate: inputs.appliedDate,
     };
 
-    onAdd(newJob);
+    if (editingJob !== null) {
+      const updatedJob: JobsType = {
+        ...newJob,
+        id: editingJob.id,
+      };
+      updateJob(updatedJob);
+    } else {
+      onAdd(newJob);
+    }
 
     setInputs({
       companyName: "",
@@ -119,7 +128,7 @@ const JobForm = ({ onAdd, editingJob }: JobFormProps) => {
           <option value="Hired">Hired</option>
           <option value="Rejected">Rejected</option>
         </select>
-        <button type="submit">Add</button>
+        <button type="submit">{editingJob ? "Save" : "Add"}</button>
       </form>
     </div>
   );
