@@ -2,6 +2,7 @@ import { useState } from "react";
 
 import type { JobsType, NewJob } from "./Types/types";
 import JobForm from "./components/JobForm";
+import JobList from "./components/JobList";
 
 const App = () => {
   const [jobs, setJobs] = useState<JobsType[]>([]);
@@ -14,6 +15,7 @@ const App = () => {
   return (
     <div>
       <JobForm onAdd={addJob} />
+      <JobList jobs={jobs} />
     </div>
   );
 };
