@@ -1,6 +1,6 @@
 import React, { useEffect, useState } from "react";
 import type { JobsType, NewJob } from "../Types/types";
-import { useNavigate } from "react-router-dom";
+import { Link, useNavigate } from "react-router-dom";
 
 interface JobFormProps {
   onAdd: (job: NewJob) => void;
@@ -80,9 +80,14 @@ const JobForm = ({ onAdd, editingJob, updateJob }: JobFormProps) => {
 
   return (
     <div className="bg-linear-to-br from-blue-50 to-indigo-50 p-6 rounded-lg shadow-md">
-      <h2 className="text-2xl font-bold text-gray-800 mb-6">
-        {editingJob ? "Edit Job" : "Add New Job"}
-      </h2>
+      <div className="flex justify-between">
+        <h2 className="text-2xl font-bold text-gray-800 mb-6">
+          {editingJob ? "Edit Job" : "Add New Job"}
+        </h2>
+        <Link to="/jobs">
+          <span className="text-sm underline text-slate-500">Job Lisiting</span>
+        </Link>
+      </div>
       <form onSubmit={handleSubmit} className="space-y-4">
         <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
           <input

@@ -8,7 +8,7 @@ interface JobListProps {
 }
 const JobList = ({ jobs, onDelete, onEdit }: JobListProps) => {
   return (
-    <ul>
+    <ul className="grid grid-cols-[repeat(auto-fit,minmax(200px,1fr))] gap-4 mt-8">
       {jobs.map((job) => (
         <JobCard key={job.id} job={job} onDelete={onDelete} onEdit={onEdit} />
       ))}

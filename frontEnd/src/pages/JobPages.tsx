@@ -28,8 +28,12 @@ const JobPages = ({ jobs, onDelete, onEdit }: JobsPagesProps) => {
   });
 
   return (
-    <div className="w-full h-screen px-5 pt-8 bg-cyan-950">
-      <Link to="/jobsForm">Add New Job</Link>
+    <div className="w-full h-screen overflow-auto px-5 py-8 bg-cyan-950 shadow-2xl shadow-slate-950">
+      <Link to="/jobsForm">
+        <span className="bg-emerald-300 py-2 px-4 rounded-xl text-slate-900/70 font-semibold">
+          Add New Job
+        </span>
+      </Link>
       <div className="relative">
         {/* Arrow Button */}
         <button
