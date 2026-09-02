@@ -21,7 +21,7 @@ const JobCard = ({ job, onDelete, onEdit }: JobCardProps) => {
     : "Date not specified";
   return (
     // In JobCard.tsx, update the <li> class:
-    <li className="flex flex-col gap-2 bg-emerald-200 p-4 rounded-lg shadow-sm">
+    <li className="group flex flex-col gap-2 bg-sky-200 p-4 rounded-lg shadow-sm hover">
       <div className="flex flex-col">
         <div className="flex items-center gap-2 mb-2">
           <FaBuilding className="text-slate-500" />
@@ -51,20 +51,39 @@ const JobCard = ({ job, onDelete, onEdit }: JobCardProps) => {
         </div>
 
         <div className="flex items-center gap-2 mb-2">
-          <GrStatusCriticalSmall />
+          <GrStatusCriticalSmall className="text-slate-500" />
           <JobStatus job={job} />
         </div>
-        <p>
-          <strong>Applied On:</strong>{" "}
+
+        <p className="mt-4">
+          <strong className="text-xs text-slate-700">Applied On:</strong>
+          <br />
           {!isNaN(date.getTime()) ? (
-            <time dateTime={date.toISOString()}>{formattedDate}</time>
+            <time
+              className="text-sm text-slate-800"
+              dateTime={date.toISOString()}
+            >
+              {formattedDate}
+            </time>
           ) : (
             formattedDate
           )}
         </p>
       </div>
-      <button onClick={() => onDelete(job.id)}>Delete</button>
-      <button onClick={() => onEdit(job.id)}>Edit</button>
+      <div className="flex justify-center items-center gap-3">
+        <button
+          className="text-sm cursor-pointer text-slate-800 opacity-0 transition group-hover:opacity-100 hover:text-gray-700 font-semibold"
+          onClick={() => onEdit(job.id)}
+        >
+          Edit
+        </button>
+        <button
+          className="text-sm cursor-pointer text-slate-800 opacity-0 transition group-hover:opacity-100 hover:text-rose-500 font-semibold"
+          onClick={() => onDelete(job.id)}
+        >
+          Delete
+        </button>
+      </div>
     </li>
   );
 };

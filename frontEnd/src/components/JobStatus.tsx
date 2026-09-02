@@ -52,18 +52,8 @@ function JobStatus({ job }: JobStatusProps) {
 
   return (
     <p
-      style={{
-        display: "inline-flex",
-        alignItems: "center",
-        gap: "8px",
-        padding: "6px 12px",
-        borderRadius: "20px",
-        fontWeight: "600",
-        fontSize: "14px",
-        color: config.color,
-        backgroundColor: config.bgColor,
-      }}
-      //   className={`flex items-center gap-8 py-1 px-2 font-medium text-sm "text-${config.color}" `}
+      style={{ color: config.color }}
+      className={`flex items-center gap-2 font-semibold py-1 px-2  text-sm text-${config.color} `}
     >
       <StatusIcon size={16} />
       <span>{config.label}</span>
