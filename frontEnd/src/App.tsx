@@ -1,14 +1,12 @@
 import { useEffect, useState } from "react";
-
-import type { JobsType, NewJob, StatusFilter } from "./Types/types";
+import { Routes, Route, useNavigate } from "react-router-dom";
+import type { JobsType, NewJob } from "./Types/types";
 import JobForm from "./components/JobForm";
-import JobList from "./components/JobList";
-import SearchFilter from "./components/SearchFilter";
-import JobFilter from "./components/JobFilter";
+import JobPages from "./pages/JobPages";
+import WelcomePage from "./pages/WelcomePage";
 
 const App = () => {
-  const [searchTerm, setSearchTerm] = useState("");
-  const [statusFilter, setStatusFilter] = useState<StatusFilter>("All");
+  const navigation = useNavigate();
   const [jobs, setJobs] = useState<JobsType[]>(() => {
     const saved = localStorage.getItem("jobs");
 
@@ -20,36 +18,7 @@ const App = () => {
     }
   });
 
-  useEffect(() => {
-    localStorage.setItem("jobs", JSON.stringify(jobs));
-  }, [jobs]);
   const [editingJob, setEditingJob] = useState<JobsType | null>(null);
-
-  const filteredJobs = jobs.filter((job) => {
-    const matchesSearch =
-      job.companyName.toLowerCase().includes(searchTerm.toLocaleLowerCase()) ||
-      job.position.toLowerCase().includes(searchTerm.toLowerCase()) ||
-      job.location.toLowerCase().includes(searchTerm.toLowerCase());
-
-    const matchesStatus = statusFilter === "All" || job.status === statusFilter;
-
-    return matchesSearch && matchesStatus;
-  });
-
-  const editJob = (id: number) => {
-    const job = jobs.find((job) => job.id === id);
-
-    if (!job) return;
-    setEditingJob(job);
-  };
-
-  // update jobs
-  const updateJob = (updatedJob: JobsType) => {
-    setJobs((prev) =>
-      prev.map((job) => (job.id === updatedJob.id ? { ...updatedJob } : job)),
-    );
-    setEditingJob(null);
-  };
 
   // add job function
   const addJob = (job: NewJob) => {
@@ -61,15 +30,48 @@ const App = () => {
     setJobs((prev) => prev.filter((job) => job.id !== id));
   };
 
+  const editJob = (id: number) => {
+    const job = jobs.find((job) => job.id === id);
+
+    if (!job) return;
+    setEditingJob(job);
+    navigation("/jobsForm");
+  };
+
+  // update jobs
+  const updateJob = (updatedJob: JobsType) => {
+    setJobs((prev) =>
+      prev.map((job) => (job.id === updatedJob.id ? { ...updatedJob } : job)),
+    );
+    setEditingJob(null);
+  };
+
+  useEffect(() => {
+    localStorage.setItem("jobs", JSON.stringify(jobs));
+  }, [jobs]);
   return (
     <div>
-      <SearchFilter onSearch={setSearchTerm} />
-      <JobFilter
-        statusFilter={statusFilter}
-        setStatusFilter={setStatusFilter}
-      />
-      <JobForm onAdd={addJob} editingJob={editingJob} updateJob={updateJob} />
-      <JobList jobs={filteredJobs} onDelete={deleteJob} onEdit={editJob} />
+      <Routes>
+        <Route path="/" element={<WelcomePage />} />
+
+        <Route
+          path="/jobs"
+          element={
+            <JobPages jobs={jobs} onDelete={deleteJob} onEdit={editJob} />
+          }
+        />
+
+        <Route
+          path="/jobsForm"
+          element={
+            <JobForm
+              onAdd={addJob}
+              editingJob={editingJob}
+              updateJob={updateJob}
+            />
+          }
+        />
+      </Routes>
     </div>
   );
 };
