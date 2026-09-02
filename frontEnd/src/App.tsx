@@ -3,8 +3,10 @@ import { useEffect, useState } from "react";
 import type { JobsType, NewJob } from "./Types/types";
 import JobForm from "./components/JobForm";
 import JobList from "./components/JobList";
+import SearchFilter from "./components/SearchFilter";
 
 const App = () => {
+  const [searchTerm, setSearchTerm] = useState("");
   const [jobs, setJobs] = useState<JobsType[]>(() => {
     const saved = localStorage.getItem("jobs");
 
@@ -20,6 +22,14 @@ const App = () => {
     localStorage.setItem("jobs", JSON.stringify(jobs));
   }, [jobs]);
   const [editingJob, setEditingJob] = useState<JobsType | null>(null);
+
+  const filteredJobs = jobs.filter((job) => {
+    return (
+      job.companyName.toLowerCase().includes(searchTerm.toLocaleLowerCase()) ||
+      job.position.toLowerCase().includes(searchTerm.toLowerCase()) ||
+      job.location.toLowerCase().includes(searchTerm.toLowerCase())
+    );
+  });
 
   const editJob = (id: number) => {
     const job = jobs.find((job) => job.id === id);
@@ -49,8 +59,9 @@ const App = () => {
 
   return (
     <div>
+      <SearchFilter onSearch={setSearchTerm} />
       <JobForm onAdd={addJob} editingJob={editingJob} updateJob={updateJob} />
-      <JobList jobs={jobs} onDelete={deleteJob} onEdit={editJob} />
+      <JobList jobs={filteredJobs} onDelete={deleteJob} onEdit={editJob} />
     </div>
   );
 };
