@@ -2,11 +2,13 @@ import express from "express";
 import "dotenv/config";
 import connectDB from "./config/jobDb.js";
 import jobRoutes from "./routes/jobRoutes.js";
+import cors from "cors";
 
 const app = express();
 process.env.MONGO_URI;
 const PORT = 5000;
 
+app.use(cors());
 app.use(express.json());
 connectDB();
 
