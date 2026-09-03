@@ -11,9 +11,16 @@ interface JobsPagesProps {
   onDelete: (id: string) => void;
   onEdit: (id: string) => void;
   loading: boolean;
+  error: string;
 }
 
-const JobPages = ({ jobs, onDelete, onEdit, loading }: JobsPagesProps) => {
+const JobPages = ({
+  jobs,
+  onDelete,
+  onEdit,
+  loading,
+  error,
+}: JobsPagesProps) => {
   const [searchTerm, setSearchTerm] = useState("");
   const [statusFilter, setStatusFilter] = useState<StatusFilter>("All");
   const [showFilters, setShowFilters] = useState(false);
@@ -32,10 +39,19 @@ const JobPages = ({ jobs, onDelete, onEdit, loading }: JobsPagesProps) => {
 
   return (
     <div className="w-full h-screen overflow-auto px-5 py-8 bg-cyan-950 shadow-2xl shadow-slate-950">
-      <Link to="/jobsForm">
-        <span className="bg-emerald-300 py-2 px-4 rounded-xl text-slate-900/70 font-semibold">
-          Add New Job
-        </span>
+      <Link
+        to="/jobsForm"
+        onClick={(e) => {
+          if (error) e.preventDefault();
+        }}
+        aria-disabled={error ? true : undefined}
+        className={`inline-block px-4 py-2 font-semibold text-white rounded text-center transition-colors ${
+          error
+            ? "bg-gray-400 cursor-not-allowed opacity-50 select-none pointer-events-none"
+            : "bg-blue-500 hover:bg-blue-600 cursor-pointer"
+        }`}
+      >
+        Add New Job
       </Link>
       <div className="relative">
         {/* Arrow Button */}
@@ -67,11 +83,12 @@ const JobPages = ({ jobs, onDelete, onEdit, loading }: JobsPagesProps) => {
           </div>
         </div>
       </div>
-
       {loading ? (
         <div className="w-full h-full flex items-center justify-center">
           <ImSpinner2 className="text-white size-20 animate-spin" />
         </div>
+      ) : error ? (
+        <p className="text-lg text-center text-rose-300 py-12">{error}</p>
       ) : jobs.length === 0 ? (
         <div className="py-12 text-center">
           <p className="text-lg font-medium text-white">No jobs added yet</p>

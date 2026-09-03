@@ -15,12 +15,15 @@ const App = () => {
   const navigation = useNavigate();
   const [jobs, setJobs] = useState<JobsType[]>([]);
   const [loading, setLoading] = useState(true);
+  const [error, setError] = useState("");
 
   useEffect(() => {
     const loadJobs = async () => {
       try {
         const data = await getJobs();
         setJobs(data);
+      } catch (error) {
+        setError("Failed to load jobs!");
       } finally {
         setLoading(false);
       }
@@ -75,6 +78,7 @@ const App = () => {
               onDelete={deleteJob}
               onEdit={editJob}
               loading={loading}
+              error={error}
             />
           }
         />
