@@ -1,4 +1,5 @@
 import Job from "../models/Job.js";
+import mongoose from "mongoose";
 
 export const createJob = async (req, res) => {
   try {
@@ -26,6 +27,11 @@ export const getJobs = async (req, res) => {
 
 export const getJob = async (req, res) => {
   try {
+    if (!mongoose.isValidObjectId(req.params.id)) {
+      return res.status(400).json({
+        message: "Invalid job ID",
+      });
+    }
     const job = await Job.findById(req.params.id);
 
     if (!job) {
@@ -44,8 +50,14 @@ export const getJob = async (req, res) => {
 
 export const updateJob = async (req, res) => {
   try {
+    if (!mongoose.isValidObjectId(req.params.id)) {
+      return res.status(400).json({
+        message: "Invalid job ID",
+      });
+    }
     const job = await Job.findByIdAndUpdate(req.params.id, req.body, {
       returnDocument: "after",
+      runValidators: true,
     });
 
     if (!job) {
@@ -64,6 +76,11 @@ export const updateJob = async (req, res) => {
 
 export const deleteJob = async (req, res) => {
   try {
+    if (!mongoose.isValidObjectId(req.params.id)) {
+      return res.status(400).json({
+        message: "Invalid job ID",
+      });
+    }
     const job = await Job.findByIdAndDelete(req.params.id);
 
     if (!job) {

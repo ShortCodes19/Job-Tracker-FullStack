@@ -2,7 +2,7 @@ import mongoose from "mongoose";
 
 const jobSchema = new mongoose.Schema(
   {
-    company: {
+    companyName: {
       type: String,
       required: true,
     },
@@ -10,7 +10,28 @@ const jobSchema = new mongoose.Schema(
       type: String,
       required: true,
     },
-    status: { type: String, required: true },
+    status: {
+      type: String,
+      enum: ["Applied", "Rejected", "Hired", "Interviewing"],
+      required: true,
+    },
+    flexibility: {
+      type: String,
+      enum: ["Remote", "on-Site"],
+      required: true,
+    },
+    location: {
+      type: String,
+      required: true,
+    },
+    salary: {
+      type: Number,
+      required: true,
+    },
+    appliedDate: {
+      type: String,
+      required: true,
+    },
   },
   { timestamps: true },
 );
