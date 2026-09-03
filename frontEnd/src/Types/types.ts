@@ -13,6 +13,6 @@ interface JobsType {
   appliedDate: string;
 }
 
-type NewJob = Omit<JobsType, "id">;
+type NewJob = Omit<JobsType, "_id">;
 
 export type { JobsType, NewJob, JobStatus, StatusFilter };

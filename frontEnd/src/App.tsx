@@ -4,7 +4,12 @@ import type { JobsType, NewJob } from "./Types/types";
 import JobForm from "./components/JobForm";
 import JobPages from "./pages/JobPages";
 import WelcomePage from "./pages/WelcomePage";
-import { getJobs, createJob, deleteJobAPI } from "./services/jobApi";
+import {
+  getJobs,
+  createJob,
+  deleteJobAPI,
+  editJobApi,
+} from "./services/jobApi";
 
 const App = () => {
   const navigation = useNavigate();
@@ -47,10 +52,9 @@ const App = () => {
   };
 
   // update jobs
-  const updateJob = (updatedJob: JobsType) => {
-    setJobs((prev) =>
-      prev.map((job) => (job._id === updatedJob._id ? { ...updatedJob } : job)),
-    );
+  const updateJob = async (id: string, updatedJob: NewJob): Promise<void> => {
+    const updated = await editJobApi(id, updatedJob);
+    setJobs((prev) => prev.map((job) => (job._id === id ? updated : job)));
     setEditingJob(null);
   };
 

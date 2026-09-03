@@ -20,3 +20,9 @@ export const deleteJobAPI = async (id: string) => {
 
   return response.data;
 };
+
+export const editJobApi = async (id: string, updatedJob: NewJob) => {
+  const response = await axios.put(`${API_URL}/${id}`, updatedJob);
+
+  return response.data;
+};

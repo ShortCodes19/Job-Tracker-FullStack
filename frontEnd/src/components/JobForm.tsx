@@ -5,7 +5,7 @@ import { Link, useNavigate } from "react-router-dom";
 interface JobFormProps {
   onAdd: (job: NewJob) => void;
   editingJob: JobsType | null;
-  updateJob: (updatedJob: JobsType) => void;
+  updateJob: (id: string, updatedJob: NewJob) => Promise<void>;
 }
 
 const JobForm = ({ onAdd, editingJob, updateJob }: JobFormProps) => {
@@ -58,11 +58,7 @@ const JobForm = ({ onAdd, editingJob, updateJob }: JobFormProps) => {
     };
 
     if (editingJob !== null) {
-      const updatedJob: JobsType = {
-        ...newJob,
-        id: editingJob.id,
-      };
-      updateJob(updatedJob);
+      updateJob(editingJob._id, newJob);
     } else {
       onAdd(newJob);
     }
