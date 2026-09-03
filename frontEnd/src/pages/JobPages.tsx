@@ -7,8 +7,8 @@ import { Link } from "react-router-dom";
 
 interface JobsPagesProps {
   jobs: JobsType[];
-  onDelete: (id: number) => void;
-  onEdit: (id: number) => void;
+  onDelete: (id: string) => void;
+  onEdit: (id: string) => void;
 }
 
 const JobPages = ({ jobs, onDelete, onEdit }: JobsPagesProps) => {
@@ -16,6 +16,7 @@ const JobPages = ({ jobs, onDelete, onEdit }: JobsPagesProps) => {
   const [statusFilter, setStatusFilter] = useState<StatusFilter>("All");
   const [showFilters, setShowFilters] = useState(false);
 
+  console.log(jobs);
   const filteredJobs = jobs.filter((job) => {
     const matchesSearch =
       job.companyName.toLowerCase().includes(searchTerm.toLowerCase()) ||

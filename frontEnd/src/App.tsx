@@ -4,34 +4,42 @@ import type { JobsType, NewJob } from "./Types/types";
 import JobForm from "./components/JobForm";
 import JobPages from "./pages/JobPages";
 import WelcomePage from "./pages/WelcomePage";
+import { getJobs, createJob, deleteJobAPI } from "./services/jobApi";
 
 const App = () => {
   const navigation = useNavigate();
-  const [jobs, setJobs] = useState<JobsType[]>(() => {
-    const saved = localStorage.getItem("jobs");
+  const [jobs, setJobs] = useState<JobsType[]>([]);
 
-    if (!saved) return [];
-    try {
-      return JSON.parse(saved);
-    } catch {
-      return [];
-    }
-  });
+  useEffect(() => {
+    const loadJobs = async () => {
+      const data = await getJobs();
+      // console.log(data);
+      setJobs(data);
+    };
+    loadJobs();
+  }, []);
 
   const [editingJob, setEditingJob] = useState<JobsType | null>(null);
 
   // add job function
-  const addJob = (job: NewJob) => {
-    setJobs((prev) => [...prev, { ...job, id: Date.now() }]);
+  const addJob = async (newJob: NewJob) => {
+    try {
+      const createdJob = await createJob(newJob);
+      console.log("created: ", createdJob);
+      setJobs((prev) => [...prev, createdJob]);
+    } catch (error) {
+      console.log(error);
+    }
   };
 
   // delete jobs function
-  const deleteJob = (id: number) => {
-    setJobs((prev) => prev.filter((job) => job.id !== id));
+  const deleteJob = async (id: string) => {
+    await deleteJobAPI(id);
+    setJobs((prev) => prev.filter((job) => job._id !== id));
   };
 
-  const editJob = (id: number) => {
-    const job = jobs.find((job) => job.id === id);
+  const editJob = (id: string) => {
+    const job = jobs.find((job) => job._id === id);
 
     if (!job) return;
     setEditingJob(job);
@@ -41,14 +49,11 @@ const App = () => {
   // update jobs
   const updateJob = (updatedJob: JobsType) => {
     setJobs((prev) =>
-      prev.map((job) => (job.id === updatedJob.id ? { ...updatedJob } : job)),
+      prev.map((job) => (job._id === updatedJob._id ? { ...updatedJob } : job)),
     );
     setEditingJob(null);
   };
 
-  useEffect(() => {
-    localStorage.setItem("jobs", JSON.stringify(jobs));
-  }, [jobs]);
   return (
     <div>
       <Routes>

@@ -3,7 +3,7 @@ type JobStatus = "Applied" | "Rejected" | "Hired" | "Interviewing";
 type StatusFilter = "All" | JobStatus;
 
 interface JobsType {
-  id: number;
+  _id: string;
   companyName: string;
   position: string;
   location: string;

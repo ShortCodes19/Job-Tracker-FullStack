@@ -6,8 +6,8 @@ import { GrStatusCriticalSmall } from "react-icons/gr";
 
 interface JobCardProps {
   job: JobsType;
-  onDelete: (id: number) => void;
-  onEdit: (id: number) => void;
+  onDelete: (id: string) => void;
+  onEdit: (id: string) => void;
 }
 const JobCard = ({ job, onDelete, onEdit }: JobCardProps) => {
   const date = new Date(job.appliedDate);
@@ -73,13 +73,13 @@ const JobCard = ({ job, onDelete, onEdit }: JobCardProps) => {
       <div className="flex justify-center items-center gap-3">
         <button
           className="text-sm cursor-pointer text-slate-800 opacity-0 transition group-hover:opacity-100 hover:text-gray-700 font-semibold"
-          onClick={() => onEdit(job.id)}
+          onClick={() => onEdit(job._id)}
         >
           Edit
         </button>
         <button
           className="text-sm cursor-pointer text-slate-800 opacity-0 transition group-hover:opacity-100 hover:text-rose-500 font-semibold"
-          onClick={() => onDelete(job.id)}
+          onClick={() => onDelete(job._id)}
         >
           Delete
         </button>
