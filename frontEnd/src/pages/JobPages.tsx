@@ -4,14 +4,16 @@ import JobFilter from "../components/JobFilter";
 import type { JobsType, StatusFilter } from "@/Types/types";
 import { useState } from "react";
 import { Link } from "react-router-dom";
+import { ImSpinner2 } from "react-icons/im";
 
 interface JobsPagesProps {
   jobs: JobsType[];
   onDelete: (id: string) => void;
   onEdit: (id: string) => void;
+  loading: boolean;
 }
 
-const JobPages = ({ jobs, onDelete, onEdit }: JobsPagesProps) => {
+const JobPages = ({ jobs, onDelete, onEdit, loading }: JobsPagesProps) => {
   const [searchTerm, setSearchTerm] = useState("");
   const [statusFilter, setStatusFilter] = useState<StatusFilter>("All");
   const [showFilters, setShowFilters] = useState(false);
@@ -66,7 +68,11 @@ const JobPages = ({ jobs, onDelete, onEdit }: JobsPagesProps) => {
         </div>
       </div>
 
-      {jobs.length === 0 ? (
+      {loading ? (
+        <div className="w-full h-full flex items-center justify-center">
+          <ImSpinner2 className="text-white size-20 animate-spin" />
+        </div>
+      ) : jobs.length === 0 ? (
         <div className="py-12 text-center">
           <p className="text-lg font-medium text-white">No jobs added yet</p>
 

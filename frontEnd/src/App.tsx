@@ -14,12 +14,16 @@ import {
 const App = () => {
   const navigation = useNavigate();
   const [jobs, setJobs] = useState<JobsType[]>([]);
+  const [loading, setLoading] = useState(true);
 
   useEffect(() => {
     const loadJobs = async () => {
-      const data = await getJobs();
-      // console.log(data);
-      setJobs(data);
+      try {
+        const data = await getJobs();
+        setJobs(data);
+      } finally {
+        setLoading(false);
+      }
     };
     loadJobs();
   }, []);
@@ -66,7 +70,12 @@ const App = () => {
         <Route
           path="/jobs"
           element={
-            <JobPages jobs={jobs} onDelete={deleteJob} onEdit={editJob} />
+            <JobPages
+              jobs={jobs}
+              onDelete={deleteJob}
+              onEdit={editJob}
+              loading={loading}
+            />
           }
         />
 
