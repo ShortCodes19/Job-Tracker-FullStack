@@ -11,15 +11,11 @@ const PORT = 5000;
 
 app.use(
   cors({
-    origin: "http://localhost:5173",
+    origin: process.env.FRONT_END_URL,
   }),
 );
 app.use(express.json());
 connectDB();
-
-// app.get("/", (req, res) => {
-//   res.send("Job Tracker API is running");
-// });
 
 app.use("/api/jobs", jobRoutes);
 
