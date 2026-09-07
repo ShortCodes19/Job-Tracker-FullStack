@@ -1,7 +1,8 @@
 import jwt from "jsonwebtoken";
 
 const authMiddlware = async (req, res, next) => {
-  const token = req.body.token;
+  const token = req.cookies.token;
+  console.log("token: ", token);
   if (!token) {
     return next("Authentication required");
   }
@@ -13,6 +14,7 @@ const authMiddlware = async (req, res, next) => {
   } catch (error) {
     return next("Invalid or expired token");
   }
+  console.log("Auth middleware hit");
 };
 
 export default authMiddlware;

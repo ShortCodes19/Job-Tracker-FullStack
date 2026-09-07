@@ -3,7 +3,10 @@ import mongoose from "mongoose";
 
 export const createJob = async (req, res, next) => {
   try {
-    const job = await Job.create(req.body);
+    const job = await Job.create({
+      ...req.body,
+      user: req.userId,
+    });
 
     res.status(201).json(job);
   } catch (error) {
@@ -13,7 +16,7 @@ export const createJob = async (req, res, next) => {
 
 export const getJobs = async (req, res, next) => {
   try {
-    const jobs = await Job.find();
+    const jobs = await Job.find({ user: req.userId });
 
     res.status(200).json(jobs);
   } catch (error) {
@@ -28,7 +31,10 @@ export const getJob = async (req, res, next) => {
         message: "Invalid job ID",
       });
     }
-    const job = await Job.findById(req.params.id);
+    const job = await Job.findOne({
+      _id: req.params.id,
+      user: req.userId,
+    });
 
     if (!job) {
       return res.status(404).json({
@@ -49,10 +55,17 @@ export const updateJob = async (req, res, next) => {
         message: "Invalid job ID",
       });
     }
-    const job = await Job.findByIdAndUpdate(req.params.id, req.body, {
-      returnDocument: "after",
-      runValidators: true,
-    });
+    const job = await Job.findOneAndUpdate(
+      {
+        _id: req.params.id,
+        user: req.userId,
+      },
+      req.body,
+      {
+        returnDocument: "after",
+        runValidators: true,
+      },
+    );
 
     if (!job) {
       return res.status(404).json({
@@ -73,7 +86,10 @@ export const deleteJob = async (req, res, next) => {
         message: "Invalid job ID",
       });
     }
-    const job = await Job.findByIdAndDelete(req.params.id);
+    const job = await Job.findOneAndDelete({
+      _id: req.params.id,
+      user: req.userId,
+    });
 
     if (!job) {
       return res.status(404).json({
