@@ -36,41 +36,49 @@ export const registerUser = async (req, res, next) => {
 };
 
 export const loginUser = async (req, res, next) => {
-  try {
-    const { email, password } = req.body;
-    if (!email || !password) {
-      return next("All fields are required!");
-    }
-
-    const matchEmail = await User1.findOne({ email });
-    if (!matchEmail) {
-      return next("Invalid email or password");
-    }
-
-    const matchPassword = await bcrypt.compare(password, matchEmail.password);
-
-    if (matchPassword) {
-      return next("Invalid email or password");
-    }
-
-    const token = jwt.sign(
-      {
-        userId: matchEmail._id,
-      },
-      process.env.JWT_SECRET,
-      { expiresIn: "7d" },
-    );
-
-    res.cookie("token", token, {
-      httpOnly: true,
-      secure: false,
-      sameSite: "strict",
-    });
-
-    return res.status(200).json({
-      message: `You logged in with ${matchEmail.email}`,
-    });
-  } catch (error) {
-    console.log(error);
+  const { email, password } = req.body;
+  if (!email || !password) {
+    return next("All fields are required!");
   }
+
+  const matchEmail = await User1.findOne({ email });
+  if (!matchEmail) {
+    return next("Invalid email or password");
+  }
+
+  const matchPassword = await bcrypt.compare(password, matchEmail.password);
+
+  if (!matchPassword) {
+    return next("Invalid email or password");
+  }
+
+  const token = jwt.sign(
+    {
+      userId: matchEmail._id,
+    },
+    process.env.JWT_SECRET,
+    { expiresIn: "7d" },
+  );
+
+  res.cookie("token", token, {
+    httpOnly: true,
+    secure: false,
+    sameSite: "strict",
+  });
+
+  return res.status(200).json({
+    message: `You logged in with ${matchEmail.email}`,
+  });
+};
+
+export const logoutUser = async (req, res) => {
+  res.clearCookie("token", {
+    httpOnly: true,
+    secure: false,
+    sameSite: "strict",
+  });
+
+  return res.status(200).json({
+    message: "Logged out successfully",
+  });
 };
