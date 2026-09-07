@@ -1,9 +1,12 @@
 import { useEffect, useState } from "react";
-import { Routes, Route, useNavigate } from "react-router-dom";
+import { Routes, Route, useLocation, useNavigate } from "react-router-dom";
 import type { JobsType, NewJob } from "./Types/types";
 import JobForm from "./components/JobForm";
 import JobPages from "./pages/JobPages";
 import WelcomePage from "./pages/WelcomePage";
+import Register from "./pages/Register";
+import Login from "./pages/Login";
+import { getCurrentUser, logoutUser } from "./services/authApi";
 import {
   getJobs,
   createJob,
@@ -13,23 +16,53 @@ import {
 
 const App = () => {
   const navigation = useNavigate();
+  const location = useLocation();
   const [jobs, setJobs] = useState<JobsType[]>([]);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState("");
 
   useEffect(() => {
+    if (location.pathname !== "/login" && location.pathname !== "/register") {
+      return;
+    }
+
+    let active = true;
+    const checkSession = async () => {
+      try {
+        await getCurrentUser();
+        if (active) {
+          navigation("/jobs");
+        }
+      } catch {
+        // An unauthenticated visitor may use the login and register pages.
+      }
+    };
+
+    checkSession();
+    return () => {
+      active = false;
+    };
+  }, [location.pathname, navigation]);
+
+  useEffect(() => {
+    if (location.pathname !== "/jobs") {
+      return;
+    }
+
+    setLoading(true);
     const loadJobs = async () => {
       try {
         const data = await getJobs();
         setJobs(data);
       } catch (error) {
         setError("Failed to load jobs!");
+        navigation("/login");
       } finally {
         setLoading(false);
       }
     };
     loadJobs();
-  }, []);
+  }, [location.pathname, navigation]);
 
   const [editingJob, setEditingJob] = useState<JobsType | null>(null);
 
@@ -65,6 +98,16 @@ const App = () => {
     setEditingJob(null);
   };
 
+  const handleLogout = async () => {
+    try {
+      await logoutUser();
+    } finally {
+      setJobs([]);
+      setEditingJob(null);
+      navigation("/login");
+    }
+  };
+
   return (
     <div>
       <Routes>
@@ -77,6 +120,7 @@ const App = () => {
               jobs={jobs}
               onDelete={deleteJob}
               onEdit={editJob}
+              onLogout={handleLogout}
               loading={loading}
               error={error}
             />
@@ -93,6 +137,9 @@ const App = () => {
             />
           }
         />
+
+        <Route path="/register" element={<Register />} />
+        <Route path="/login" element={<Login />} />
       </Routes>
     </div>
   );

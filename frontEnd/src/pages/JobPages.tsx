@@ -10,6 +10,7 @@ interface JobsPagesProps {
   jobs: JobsType[];
   onDelete: (id: string) => void;
   onEdit: (id: string) => void;
+  onLogout: () => void;
   loading: boolean;
   error: string;
 }
@@ -18,6 +19,7 @@ const JobPages = ({
   jobs,
   onDelete,
   onEdit,
+  onLogout,
   loading,
   error,
 }: JobsPagesProps) => {
@@ -25,7 +27,6 @@ const JobPages = ({
   const [statusFilter, setStatusFilter] = useState<StatusFilter>("All");
   const [showFilters, setShowFilters] = useState(false);
 
-  console.log(jobs);
   const filteredJobs = jobs.filter((job) => {
     const matchesSearch =
       job.companyName.toLowerCase().includes(searchTerm.toLowerCase()) ||
@@ -39,20 +40,29 @@ const JobPages = ({
 
   return (
     <div className="w-full h-screen overflow-auto px-5 py-8 bg-cyan-950 shadow-2xl shadow-slate-950">
-      <Link
-        to="/jobsForm"
-        onClick={(e) => {
-          if (error) e.preventDefault();
-        }}
-        aria-disabled={error ? true : undefined}
-        className={`inline-block px-4 py-2 font-semibold text-white rounded text-center transition-colors ${
-          error
-            ? "bg-gray-400 cursor-not-allowed opacity-50 select-none pointer-events-none"
-            : "bg-blue-500 hover:bg-blue-600 cursor-pointer"
-        }`}
-      >
-        Add New Job
-      </Link>
+      <div className="flex items-center justify-between gap-4">
+        <Link
+          to="/jobsForm"
+          onClick={(e) => {
+            if (error) e.preventDefault();
+          }}
+          aria-disabled={error ? true : undefined}
+          className={`inline-block rounded px-4 py-2 text-center font-semibold text-white transition-colors ${
+            error
+              ? "pointer-events-none cursor-not-allowed bg-gray-400 opacity-50"
+              : "cursor-pointer bg-blue-500 hover:bg-blue-600"
+          }`}
+        >
+          Add New Job
+        </Link>
+        <button
+          type="button"
+          onClick={onLogout}
+          className="rounded border border-cyan-300/40 px-4 py-2 text-sm font-semibold text-cyan-100 transition hover:border-cyan-200 hover:bg-cyan-900"
+        >
+          Log out
+        </button>
+      </div>
       <div className="relative">
         {/* Arrow Button */}
         <button

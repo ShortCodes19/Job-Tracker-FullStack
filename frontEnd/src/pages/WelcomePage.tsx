@@ -19,10 +19,16 @@ const WelcomePage = () => {
 
           {/* CTA Button */}
           <Link
-            to="/jobs"
-            className="inline-block px-8 py-4 bg-white text-indigo-600 font-bold text-lg rounded-lg shadow-lg hover:shadow-xl hover:bg-gray-50 transition-all duration-200 transform hover:scale-105"
+            to="/register"
+            className="inline-block px-8 py-4 bg-white text-indigo-600 font-bold text-lg rounded-lg shadow-lg hover:shadow-xl hover:bg-gray-50 transition-all duration-200 transform hover:scale-105 mx-2"
           >
-            Get Started
+            Sign Up
+          </Link>
+          <Link
+            to="/login"
+            className="inline-block px-8 py-4 bg-indigo-950 text-white font-bold text-lg rounded-lg shadow-lg hover:shadow-xl hover:bg-indigo-900 transition-all duration-200 transform hover:scale-105 mx-2"
+          >
+            Sign In
           </Link>
         </div>
       </div>

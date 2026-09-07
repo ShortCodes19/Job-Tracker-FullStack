@@ -14,6 +14,7 @@ const PORT = 5000;
 app.use(
   cors({
     origin: process.env.FRONT_END_URL,
+    credentials: true,
   }),
 );
 app.use(express.json());
